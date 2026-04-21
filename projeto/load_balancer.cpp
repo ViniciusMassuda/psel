@@ -16,14 +16,14 @@ int main() {
 
     std::cout << "Load Balancer rodando na porta 8080\n";
 
-    // 🔹 backends disponíveis
     int ports[] = {9001, 9002};
     int current = 0;
 
     while (true) {
         int client_socket = accept(server_fd, nullptr, nullptr);
 
-        // 🔹 escolhe backend (round robin)
+        std::cout << "\nNova conexão recebida!" << std::endl;
+
         int backend_port = ports[current];
         current = (current + 1) % 2;
 
@@ -38,20 +38,23 @@ int main() {
 
         connect(backend_socket, (struct sockaddr*)&backend_addr, sizeof(backend_addr));
 
-        // 🔹 lê requisição do cliente
         char buffer[30000];
-        int size = read(client_socket, buffer, 30000);
 
-        // 🔹 envia para backend
-        send(backend_socket, buffer, size, 0);
+        int req_size = read(client_socket, buffer, 30000);
+        std::cout << "Recebeu requisição do cliente (" << req_size << " bytes)" << std::endl;
 
-        // 🔹 recebe resposta do backend
-        size = read(backend_socket, buffer, 30000);
+        send(backend_socket, buffer, req_size, 0);
+        std::cout << "Requisição enviada para backend" << std::endl;
 
-        // 🔹 envia de volta para cliente
-        send(client_socket, buffer, size, 0);
+        int resp_size = read(backend_socket, buffer, 30000);
+        std::cout << "Resposta recebida do backend (" << resp_size << " bytes)" << std::endl;
+
+        send(client_socket, buffer, resp_size, 0);
+        std::cout << "Resposta enviada ao cliente" << std::endl;
 
         close(client_socket);
         close(backend_socket);
+
+        std::cout << "Conexão finalizada\n" << std::endl;
     }
 }
