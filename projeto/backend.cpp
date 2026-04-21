@@ -10,8 +10,8 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    int port = atoi(argv[1]);      // porta
-    std::string name = argv[2];    // nome (A ou B)
+    int port = atoi(argv[1]);
+    std::string name = argv[2];
 
     int server_fd = socket(AF_INET, SOCK_STREAM, 0);
 
@@ -29,13 +29,16 @@ int main(int argc, char* argv[]) {
         int new_socket = accept(server_fd, nullptr, nullptr);
 
         char buffer[30000];
-        read(new_socket, buffer, 30000); // lê requisição
+        read(new_socket, buffer, 30000);
 
-        // 🔹 resposta com nome do backend
         std::string response =
             "HTTP/1.1 200 OK\r\n"
             "Content-Type: text/plain\r\n"
+            "Content-Length: " + std::to_string(name.size() + 1) + "\r\n"
             "Connection: close\r\n"
+            "Cache-Control: no-cache, no-store, must-revalidate\r\n"
+            "Pragma: no-cache\r\n"
+            "Expires: 0\r\n"
             "\r\n" +
             name + "\n";
 
