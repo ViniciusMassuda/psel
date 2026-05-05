@@ -30,11 +30,17 @@ O Load Balancer atua como intermediário entre o cliente e os servidores backend
 Fluxo de funcionamento:
 
 1º - O cliente envia uma requisição HTTP para o Load Balancer (porta 8080);
+
 2º - O Load Balancer recebe a requisição via socket TCP;
+
 3º - Seleciona um servidor backend utilizando o algoritmo Round-Robin;
+
 4º - Abre uma conexão com o backend escolhido;
+
 5º - Encaminha a requisição original;
+
 6º - Recebe a resposta do backend;
+
 7º - Retorna a resposta para o cliente.
 
 Os servidores backend são implementações simples que retornam uma resposta HTTP contendo sua identificação, permitindo visualizar o balanceamento.
@@ -55,7 +61,9 @@ O algoritmo foi implementado utilizando um índice que percorre um array de port
 Exemplo:
 
 Requisição 1 → Backend A
+
 Requisição 2 → Backend B
+
 Requisição 3 → Backend A
 
 Testes:
@@ -76,22 +84,31 @@ Aprendizados:
 
 Como Executar:
 
-1º. Compilar
-g++ backend.cpp -o backend
-g++ load_balancer.cpp -o lb
+1º. Compilar:
 
-2º. Rodar os backends
-./backend 9001 A
-./backend 9002 B
+- g++ backend.cpp -o backend
 
-3º. Rodar o Load Balancer
-./lb
+- g++ load_balancer.cpp -o lb
 
-4º. Testar
+2º. Rodar os backends:
+
+- ./backend 9001 A
+
+- ./backend 9002 B
+
+3º. Rodar o Load Balancer:
+
+- ./lb
+
+4º. Testar:
+
 No navegador:
-http://localhost:8080
+
+- http://localhost:8080
+
 Via terminal:
-curl http://localhost:8080
+
+- curl http://localhost:8080
 
 Referências e Processo de Aprendizado:
 
@@ -116,8 +133,6 @@ https://evolveasdev.com/blogs/guide/beginners-guide-to-socket-programming-in-c-s
 
 - Documentação oficial de sockets:
 https://manpages.ubuntu.com/manpages/bionic/man2/socket.2.html
-
-Além disso, o desenvolvimento foi feito de forma incremental, começando por um servidor TCP simples, evoluindo para um proxy e, por fim, adicionando o balanceamento de carga.
 
 Dificuldades Encontradas:
 
